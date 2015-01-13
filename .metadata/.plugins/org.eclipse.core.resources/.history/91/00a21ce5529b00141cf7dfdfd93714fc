@@ -210,7 +210,7 @@ public class App extends javax.swing.JFrame {
 								TableModel jTable1Model = 
 										new DefaultTableModel(
 												null,
-												new String[] { "Лонг","Шорт","Last spread ratio" });
+												new String[] { "Лонг","Spread ratio", "Шорт","Spread ratio" });
 								jTable1 = new JTable();
 								
 								jScrollPane1.setViewportView(jTable1);
@@ -374,9 +374,9 @@ public class App extends javax.swing.JFrame {
 			int size = currPair.getData().size();
 			rows[j][0] = currPair.getBaseStock().getTicker();
 			rows[j][1] = currPair.getSecondStock().getTicker();
-			rows[j][2] = currPair.getData().get(size - 1).getSpreadValue().toString();
+			rows[j][2] = currPair.getData().get(size);
 		}
-		DefaultTableModel model = new DefaultTableModel(rows, new String[] {"Лонг","Шорт","Last spread Ratio"}){
+		DefaultTableModel model = new DefaultTableModel(rows, new String[] {"Лонг","Шорт","Last Spread Ratio"}){
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			};
