@@ -1,0 +1,50 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class ControllerPanel extends JPanel {
+	private JButton loadBtn;
+	private JTextArea textArea;
+	private JPanel tickerPanel;
+	private JPanel datePanel;
+	private JLabel label;
+	private JComboBox monthFromBox;
+	private JComboBox monthToBox;
+	
+	public ControllerPanel() {
+		super();
+		textArea = new JTextArea();
+		loadBtn = new JButton("Get Quotes");
+		setLayout(new BorderLayout());
+		
+		//Панель с тикерами
+		tickerPanel = new JPanel();
+		tickerPanel.add(textArea);
+		add(tickerPanel);
+		
+		//Панель с настройками дат от и до
+		datePanel = new JPanel();
+		datePanel.setLayout(new GridLayout(4, 2));
+		
+		//Первая строка
+		label = new JLabel("Start Date");
+		String [] monthlist = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+		monthFromBox = new JComboBox(monthlist);
+		dayField = new JTextField();
+		
+		//Вторая строка
+		monthToBox = new JComboBox(monthlist);
+		
+		datePanel.add(label);
+		datePanel.add(monthFromBox);
+	}
+}

@@ -1,0 +1,218 @@
+package util;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import model.DailyData;
+import model.Portfolio;
+import model.Stock;
+
+
+public class QuoteLoader {
+	URL url;
+	URLConnection conn;
+	InputStreamReader in;
+	BufferedReader buff;
+	
+	private String urlLink;
+	private String startMonth = "00";
+	private String startDay = "03";
+	private String startYear = "2007";
+	private String tf = "d";
+	private String endYear = "2014";
+	private String endDay = "21";
+	private String endMonth = "02";
+	
+	private Portfolio p = new Portfolio();
+	private String prevPrice = null;
+
+	
+	public void loadQuotes(String ticker) {
+		if(ticker == null)
+			return;
+		Stock tmp = new Stock();
+		
+		urlLink = "http://real-chart.finance.yahoo.com/table.csv?"
+				+ "s=%s&a=%s&b=%s&c=%s&d=%s&e=%s&f=%s&g=%s&ignore=.csv";
+
+		Object[] args = {
+				ticker,
+				getStartMonth(),
+				getStartDay(),
+				getStartYear(),
+				getEndMonth(),
+				getEndDay(),
+				getEndYear(),
+				tf};
+		
+		urlLink = String.format(urlLink, args);
+		try {
+			url = new URL(urlLink);
+			conn = url.openConnection();
+			
+			InputStreamReader reader = new InputStreamReader(conn.getInputStream());
+			buff = new BufferedReader(reader);
+			
+			int i = 0;
+			while(true) {
+				String cvsStr = buff.readLine();
+				if(cvsStr == null) {
+					break;
+				}
+				
+				if(i == 0) {
+					i++;
+					continue;
+				}
+				
+				StringTokenizer tokenizer = new StringTokenizer(cvsStr,",");
+
+				String date = tokenizer.nextToken();
+				tokenizer.nextToken();
+				tokenizer.nextToken();
+				tokenizer.nextToken();
+				tokenizer.nextToken();
+				tokenizer.nextToken();
+				String adjClose = tokenizer.nextToken();
+//				System.out.println(ticker + " : " + date + " : " + adjClose);
+				DailyData data = new DailyData();
+				data.setAdjClose(adjClose);
+				data.setDate(date);
+				tmp.addData(data);
+				tmp.setTicker(ticker);
+				
+
+				i++;
+			}
+			
+			List<DailyData> ddList = tmp.getData();
+			List<DailyData> modList = new ArrayList<DailyData>();
+			int size = ddList.size();
+			for(int g = size - 1;g >= 0; g--) {
+				DailyData dd = ddList.get(g);
+				modList.add(dd);
+			}
+			tmp.setData(modList);
+			
+		} catch (MalformedURLException e) {
+			System.out.println("Ошибка при загрузке данных.");
+		} catch (UnknownHostException e) {
+			System.out.println("Ошибка при загрузке данных.");
+		}
+		catch (IOException e) {
+			System.out.println("Ошибка при загрузке данных. Попробуйте заново");
+		} 
+		
+		finally {
+			p.addStock(tmp);
+			
+		}
+		
+	}
+	
+	public Portfolio getPortfolio() {
+		return p;
+	}
+	
+	/**
+	 * Сравниваем первые даты, находим самую старую дату и удаляем в цикле до менее старой даты. 
+	 * Также поступаем с остальными акциями в портфолио. Таким образом получим что все массивы данных будут начинаться
+	 * с одной даты
+	 * @param port 
+	 * @return 
+	 */
+	public Date checkDates(Portfolio port) {
+		java.util.Date earlyDate = null;
+		boolean isDatesNotEqual = false;
+		
+		for(Stock st : port.getWatchList()) {
+			try {
+				java.util.Date tmp = new SimpleDateFormat("yyyy-MM-dd").parse(st.getData().get(0).getDate());
+				
+				if(earlyDate == null) {
+					earlyDate = tmp;
+					continue;
+				}
+				
+				if(tmp.after(earlyDate)) {
+					earlyDate = tmp;
+					isDatesNotEqual = true;
+				}
+				else if(tmp.before(earlyDate)) {
+					isDatesNotEqual = true;
+				}
+				
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		if(isDatesNotEqual)
+			return earlyDate;
+		else {
+			return null;
+		}
+	}
+
+	public String getStartMonth() {
+		return startMonth;
+	}
+
+	public void setStartMonth(String startMonth) {
+		this.startMonth = startMonth;
+	}
+
+	
+	public String getStartDay() {
+		return startDay;
+	}
+
+	
+	public void setStartDay(String startDay) {
+		this.startDay = startDay;
+	}
+
+	public String getStartYear() {
+		return startYear;
+	}
+
+	public void setStartYear(String startYear) {
+		this.startYear = startYear;
+	}
+
+	public String getEndYear() {
+		return endYear;
+	}
+
+	public void setEndYear(String endYear) {
+		this.endYear = endYear;
+	}
+
+	public String getEndDay() {
+		return endDay;
+	}
+
+	public void setEndDay(String endDay) {
+		this.endDay = endDay;
+	}
+
+	public String getEndMonth() {
+		return endMonth;
+	}
+
+	public void setEndMonth(String endMonth) {
+		this.endMonth = endMonth;
+	}
+	
+	
+	
+}

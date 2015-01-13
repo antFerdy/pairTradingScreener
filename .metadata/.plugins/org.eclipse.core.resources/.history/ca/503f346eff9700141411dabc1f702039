@@ -1,0 +1,58 @@
+package controller;
+
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.List;
+
+import javax.swing.SwingUtilities;
+
+import util.QuoteLoader;
+import util.SpreadCounter;
+import util.UtilHelper;
+import view.App;
+import model.Portfolio;
+import model.SpreadObject;
+import model.Stock;
+
+public class Controller {
+	private static App inst;
+	private static QuoteLoader loader;
+	
+	public static void main(String[] args) {
+		loader = new QuoteLoader();
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				inst = new App();
+				inst.setLocationRelativeTo(null);
+				inst.setVisible(true);
+			}
+		});
+	}
+		
+	public static void getQuotes(String [] tickers) {
+		for(String ticker : tickers) {
+			loader.loadQuotes(ticker);
+		}
+		
+		
+		
+		//Вытаскиваем акцию и данные по ней, считаем для каждого дня приращение
+		Portfolio p = loader.getPortfolio();
+		for(Stock item : p.getWatchList()) {
+			UtilHelper.loadMath(item.getData());
+		}
+		
+		//Считаем спред
+		SpreadCounter spCounter = new SpreadCounter();
+		List<SpreadObject> list = spCounter.loadSpread(p);
+		
+		//Добавляем данные о спредах в таблицу
+		inst.addData(list);
+
+	}
+	
+
+}
+  

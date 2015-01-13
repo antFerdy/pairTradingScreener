@@ -1,0 +1,30 @@
+package view;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+public class MainFrame extends JFrame{
+	
+	private JPanel graphPanel;
+	private JPanel controllerPanel;
+	private JButton loadBtn;
+	private JTextArea textArea;
+	
+	
+	public MainFrame(String name) {
+		super(name);
+		setLayout(new BorderLayout());
+		setSize(600, 500);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		textArea = new JTextArea();
+		loadBtn = new JButton();
+		
+		
+		setVisible(true);
+	}
+}

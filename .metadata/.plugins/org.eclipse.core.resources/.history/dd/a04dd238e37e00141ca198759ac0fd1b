@@ -1,0 +1,30 @@
+package view;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class MainFrame extends JFrame{
+	
+	private JPanel graphPanel;
+	private ControllerPanel controllerPanel;
+//	private JButton loadBtn;
+//	private JTextArea textArea;
+	
+	
+	public MainFrame(String name) {
+		super(name);
+		setLayout(new BorderLayout());
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		controllerPanel = new ControllerPanel();
+		add(controllerPanel, BorderLayout.CENTER);
+		
+//		add(textArea, BorderLayout.CENTER);
+//		add(loadBtn, BorderLayout.SOUTH);
+		pack();
+		setVisible(true);
+	}
+}

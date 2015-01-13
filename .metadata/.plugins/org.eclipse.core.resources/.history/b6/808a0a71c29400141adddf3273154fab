@@ -1,0 +1,111 @@
+package util;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import model.Portfolio;
+import model.SpreadData;
+import model.SpreadObject;
+import model.Stock;
+
+public class SpreadCounter {
+	
+	public List<SpreadObject> loadSpread(Portfolio p) {
+		Portfolio port = Portfolio.newInstance(p);
+		List<SpreadObject> spreadList = new ArrayList<SpreadObject>();
+		
+		//вычисляем спред
+		Iterator<Stock> itBase = p.getWatchList().iterator();
+		while(itBase.hasNext()) {
+			Stock baseStock = itBase.next();
+			
+			Iterator<Stock> itSec = port.getWatchList().iterator();
+			while (itSec.hasNext()) {
+				Stock secStock = (Stock) itSec.next();
+				if(baseStock.equals(secStock))
+					continue;
+				
+//				if(pairExist(baseStock, secStock, spreadList))
+//					continue;
+					
+				spreadList.add(spreadCounter(baseStock, secStock));
+				
+			}
+			itSec.remove();
+		}
+		return spreadList;
+	}
+	
+	
+	
+	/**
+	 *Вычисляем спред
+	 * @return 
+	 */
+	public SpreadObject spreadCounter(Stock firstStock, Stock secondStock) {
+		BigDecimal prevFirstSpread = null;
+		BigDecimal prevSecondSpread = null;
+		SpreadObject obj = new SpreadObject();
+		obj.setBaseStock(firstStock);
+		obj.setSecondStock(secondStock);
+		
+		//Находим наиболее раннию дату для обоих акций
+		QuoteLoader loader = new QuoteLoader();
+		Stock[] watchList = {firstStock, secondStock};
+		Date earliestDate = loader.checkDates(watchList);
+		
+		//Приводим данные к одной дате начала
+		if(earliestDate != null) {
+			try {
+				UtilHelper.deleteOldData(firstStock, earliestDate);
+				UtilHelper.deleteOldData(secondStock, earliestDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+		
+		//Ищем значение нормализированного ряда
+		for(int i = 0; i < firstStock.getData().size(); i++) {
+			BigDecimal firstVolat = firstStock.getData().get(i).getVolatile();
+			BigDecimal secondVolat = secondStock.getData().get(i).getVolatile();
+			
+			if(firstVolat != null && secondVolat != null) {
+				//Проверяем даты
+				String secondStDate = secondStock.getData().get(i).getDate();
+				String firstStDate = firstStock.getData().get(i).getDate();		
+				if(!firstStDate.equalsIgnoreCase(secondStDate))
+					break;
+						
+				if(prevFirstSpread == null) {
+					prevFirstSpread = firstVolat;
+					prevSecondSpread = secondVolat;
+				} else {
+					prevFirstSpread = prevFirstSpread.add(firstVolat);
+					prevSecondSpread = prevSecondSpread.add(secondVolat);
+					BigDecimal spread = prevFirstSpread.subtract(prevSecondSpread);
+					obj.addData(new SpreadData(firstStDate, spread));
+				}
+			}
+			
+//				String secondStDate = secondStock.getData().get(i).getDate();
+//				String firstStDate = firstStock.getData().get(i).getDate();			
+//				if(firstStDate.equalsIgnoreCase(secondStDate)) {
+//					if(prevSpread == null) {
+//						prevSpread = firstVolat.subtract(secondVolat);
+//					} else {
+//						BigDecimal currSpread = prevSpread.add(firstVolat);
+//						obj.addSpread(firstStDate, currSpread);
+//					}
+		}	
+		return obj;
+	}
+	
+}
