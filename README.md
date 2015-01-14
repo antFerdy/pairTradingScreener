@@ -1,0 +1,3 @@
+# pairtradingscreener
+
+Скринер парных акций
