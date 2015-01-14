@@ -210,7 +210,7 @@ public class App extends javax.swing.JFrame {
 								TableModel jTable1Model = 
 										new DefaultTableModel(
 												null,
-												new String[] {"Лонг","MA Value","Шорт","MA Value"});
+												new String[] { "Лонг","Шорт","Last spread ratio" });
 								jTable1 = new JTable();
 								
 								jScrollPane1.setViewportView(jTable1);

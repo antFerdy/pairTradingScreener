@@ -69,7 +69,6 @@ public class UtilHelper {
 				maValue = UtilHelper.getMaValue(ma20);
 				ma20.remove(0);
 				
-				dd.setAverVolatile(maValue);
 				if(firstTime) {
 					prevMaValue = maValue;
 					firstTime = false;

@@ -210,7 +210,7 @@ public class App extends javax.swing.JFrame {
 								TableModel jTable1Model = 
 										new DefaultTableModel(
 												null,
-												new String[] {"Лонг","MA Value","Шорт","MA Value"});
+												new String[] { "Лонг","Шорт","Last spread ratio" });
 								jTable1 = new JTable();
 								
 								jScrollPane1.setViewportView(jTable1);
@@ -366,18 +366,17 @@ public class App extends javax.swing.JFrame {
 		Object rows[][] = new Object[spreadList.size()][4];
 		for(int j = 0; j < spreadList.size(); j++) {
 			SpreadObject currPair = spreadList.get(j);
-			int lastIndexBase = currPair.getBaseStock().getData().size();
-			int lastIndexSec = currPair.getSecondStock().getData().size();
-			DailyData firstVal = currPair.getBaseStock().getData().get(lastIndexBase - 1);
-			DailyData secVal = currPair.getSecondStock().getData().get(lastIndexSec - 1);
+//			int lastIndexBase = currPair.getBaseStock().getData().size();
+//			int lastIndexSec = currPair.getSecondStock().getData().size();
+//			DailyData firstVal = currPair.getBaseStock().getData().get(lastIndexBase - 1);
+//			DailyData secVal = currPair.getSecondStock().getData().get(lastIndexSec - 1);
 			
-//			int size = currPair.getData().size();
+			int size = currPair.getData().size();
 			rows[j][0] = currPair.getBaseStock().getTicker();
-			rows[j][1] = firstVal.getAverVolatile().toPlainString();
-			rows[j][2] = currPair.getSecondStock().getTicker();
-			rows[j][3] = secVal.getAverVolatile().toPlainString();
+			rows[j][1] = currPair.getSecondStock().getTicker();
+			rows[j][2] = currPair.getData().get(size - 1).
 		}
-		DefaultTableModel model = new DefaultTableModel(rows, new String[] {"Лонг","MA Value","Шорт","MA Value"}){
+		DefaultTableModel model = new DefaultTableModel(rows, new String[] {"Лонг","Шорт","MA Value"}){
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			};

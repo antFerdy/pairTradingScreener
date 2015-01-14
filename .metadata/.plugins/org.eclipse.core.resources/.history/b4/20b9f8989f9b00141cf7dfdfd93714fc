@@ -7,8 +7,7 @@ public class DailyData {
 	private String date;
 	private String adjClose;
 	private BigDecimal volatIndex;
-	private BigDecimal maValue;
-
+	
 	public String getAdjClose() {
 		return adjClose;
 	}
@@ -28,9 +27,7 @@ public class DailyData {
 		this.volatIndex = maValue;
 	}
 	public void setAverVolatile(BigDecimal maValue) {
-		this.maValue = maValue;
-	}
-	public BigDecimal getAverVolatile() {
-		return maValue;
+		// TODO Auto-generated method stub
+		
 	}
 }

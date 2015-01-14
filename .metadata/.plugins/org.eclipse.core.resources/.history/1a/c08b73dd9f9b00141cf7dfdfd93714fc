@@ -30,7 +30,7 @@ public class DailyData {
 	public void setAverVolatile(BigDecimal maValue) {
 		this.maValue = maValue;
 	}
-	public BigDecimal getAverVolatile() {
+	public void getAverVolatile() {
 		return maValue;
 	}
 }
