@@ -191,7 +191,11 @@ public class App extends javax.swing.JFrame {
 										tickers[i] = tokenizer.nextToken();
 										i++;
 									}
-									Controller.getQuotes(tickers);
+									try {
+										Controller.getQuotes(tickers);
+									} catch (CloneNotSupportedException e) {
+										JOptionPane.showMessageDialog(jPanel1, "Ошибка при клонировании объектов");
+									}
 									jButton1.setEnabled(false);
 								}
 							});

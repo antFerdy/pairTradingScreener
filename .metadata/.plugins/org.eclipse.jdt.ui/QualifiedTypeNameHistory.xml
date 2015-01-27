@@ -59,4 +59,5 @@
 <fullyQualifiedTypeName name="javax.swing.text.DefaultCaret"/>
 <fullyQualifiedTypeName name="javax.swing.JScrollPane"/>
 <fullyQualifiedTypeName name="java.awt.BorderLayout"/>
+<fullyQualifiedTypeName name="java.lang.Cloneable"/>
 </qualifiedTypeNameHistroy>

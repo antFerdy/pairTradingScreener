@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Extract method &apos;private static void countMath()&apos; from &apos;controller.Controller.getQuotes()&apos; to &apos;controller.Controller&apos;&#x0D;&#x0A;- Original project: &apos;PairTradingScreener&apos;&#x0D;&#x0A;- Method name: &apos;countMath&apos;&#x0D;&#x0A;- Destination type: &apos;controller.Controller&apos;&#x0D;&#x0A;- Declared visibility: &apos;private&apos;" comments="false" description="Extract method &apos;countMath&apos;" destination="0" exceptions="false" flags="786434" id="org.eclipse.jdt.ui.extract.method" input="/src&lt;controller{Controller.java" name="countMath" replace="false" selection="1025 255" stamp="1422358270201" version="1.0" visibility="2"/>
+</session>

@@ -14,7 +14,7 @@ import model.Stock;
 
 public class SpreadCounter {
 	
-	public List<SpreadObject> loadSpread(Portfolio p) {
+	public List<SpreadObject> loadSpread(Portfolio p) throws CloneNotSupportedException {
 		Portfolio port = Portfolio.newInstance(p);
 		List<SpreadObject> spreadList = new ArrayList<SpreadObject>();
 		
@@ -32,7 +32,7 @@ public class SpreadCounter {
 					itSec.remove();
 					continue;
 				}
-				spreadList.add(spreadCounter(baseStock, secStock));
+				spreadList.add(spreadCounter(baseStock.clone(), secStock.clone()));
 			}
 
 		}
@@ -48,6 +48,8 @@ public class SpreadCounter {
 	private SpreadObject spreadCounter(Stock firstStock, Stock secondStock) {
 		BigDecimal prevFirstSpread = null;
 		BigDecimal prevSecondSpread = null;
+		
+		
 		SpreadObject obj = new SpreadObject();
 		obj.setBaseStock(firstStock);
 		obj.setSecondStock(secondStock);

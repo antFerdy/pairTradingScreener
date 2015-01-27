@@ -40,14 +40,15 @@ public class UtilHelper {
 	/***
 	 * Данный метод считает математику для каждого конкретного дня по акции 
 	 * @param item 
+	 * @return 
 	 */
-	public static void loadMath(List<DailyData> data, Stock item) {
+	public static String loadMath(Stock item) {		
 		double prevPrice = 0;
 		List<BigDecimal> ma20 = new ArrayList<BigDecimal>(21); 
 		boolean firstTime = true;
 		BigDecimal maValue;
 		BigDecimal prevMaValue = null;
-		
+		List<DailyData> data = item.getData();
 		for(int i = 0; i < data.size(); i++) {
 			DailyData dd = data.get(i);
 			//Вычисляем приращение цены по сравнению с закрытием предыдущего дня
@@ -58,7 +59,8 @@ public class UtilHelper {
 			
 			Double currPrice = Double.valueOf(dd.getAdjClose());
 			double dailyChange = currPrice/prevPrice;
-			BigDecimal dailyDeltaLog = new BigDecimal(Math.log(dailyChange));
+			double ch = Math.log(dailyChange);
+			BigDecimal dailyDeltaLog = new BigDecimal(ch);
 			BigDecimal dailyDeltaLogAbs = dailyDeltaLog.abs();
 			
 			prevPrice = currPrice;
@@ -83,13 +85,14 @@ public class UtilHelper {
 					prevMaValue = maValue;
 					
 				} catch (ArithmeticException e) {
-					System.out.println(item.getTicker());
+					return item.getTicker();
 				} 
 				
 				
 			}
 			
 		}
+		return null;
 	}
 	
 	/**

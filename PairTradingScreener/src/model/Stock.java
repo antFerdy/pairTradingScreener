@@ -3,9 +3,9 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stock {
+public class Stock implements Cloneable {
 	private String ticker;
-	private List<DailyData> data = new ArrayList<DailyData>();
+	private ArrayList<DailyData> data = new ArrayList<DailyData>();
 	
 	public void addData(DailyData currData) {
 		data.add(currData);
@@ -25,7 +25,16 @@ public class Stock {
 	}
 
 	public void setData(List<DailyData> data) {
-		this.data = data;
+		this.data = (ArrayList<DailyData>) data;
+	}
+	
+	public Stock clone() throws CloneNotSupportedException {
+		Stock clone = (Stock) super.clone();
+		ArrayList<DailyData> newList = (ArrayList<DailyData>) data.clone();
+		clone.setData(newList);
+		clone.setTicker(getTicker());
+		return clone;
+		
 	}
 	
 }
