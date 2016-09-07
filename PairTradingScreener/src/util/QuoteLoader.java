@@ -79,7 +79,7 @@ public class QuoteLoader {
 				getEndYear(),
 				tf};
 		try {
-		urlLink = String.format(urlLink, args);
+			urlLink = String.format(urlLink, args);
 			url = new URL(urlLink);
 			conn = url.openConnection();
 			

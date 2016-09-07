@@ -34,5 +34,14 @@ public class Portfolio {
 	public void clear() {
 		watchList.clear();
 	}
+	
+//	public static void delete(String ticker) {
+//		for (int i = 0; i < watchList.size(); i++) {
+//			Stock st = watchList.get(i);
+//			if(st.getTicker() == ticker) {
+//				watchList.remove(i);
+//			}
+//		}
+//	}
 
 }

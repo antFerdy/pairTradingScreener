@@ -1,8 +1,11 @@
 package controller;
 
 
+import java.awt.Color;
+import java.awt.Container;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class Controller {
 	private static App inst;
 	private static QuoteLoader loader;
 	private static Portfolio p;
+	private static List<String> tickersToDelete = new ArrayList<String>();
 	
 	public static void main(String[] args) {
 		loader = new QuoteLoader();
@@ -31,6 +35,8 @@ public class Controller {
 				inst.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				inst.setLocationRelativeTo(null);
 				inst.setVisible(true);
+				
+				
 			}
 		});
 	}
@@ -42,6 +48,9 @@ public class Controller {
 		p = loader.getPortfolio();
 		
 		countMath();
+//		for(String item : tickersToDelete) {
+//			p.delete(item);
+//		}
 		
 		//—читаем спред
 		SpreadCounter spCounter = new SpreadCounter();

@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.geom.Ellipse2D;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -83,6 +85,8 @@ public class App extends javax.swing.JFrame {
 	private JMenuItem cutMenuItem;
 	private JMenu jMenu4;
 	private JMenuItem exitMenuItem;
+	private JMenuItem saveWithoutDataItem;
+	private JMenuItem saveToCsvItem;
 	private JSeparator jSeparator2;
 	private JTextArea jTextArea1;
 	private JPanel jPanel5;
@@ -98,6 +102,7 @@ public class App extends javax.swing.JFrame {
 	private JFreeChart chart = null;
 	private DateAxis axis;
 	private JScrollPane jScrollPane2;
+	private List<SpreadObject> spreadList = null;
 
 //	/**
 //	* Auto-generated main method to display this JFrame
@@ -265,6 +270,8 @@ public class App extends javax.swing.JFrame {
 					}
 					{
 						jSeparator2 = new JSeparator();
+						jMenu3.add(getSaveToCsvItem());
+						jMenu3.add(getSaveWithoutDataItem());
 						jMenu3.add(jSeparator2);
 					}
 					{
@@ -367,6 +374,7 @@ public class App extends javax.swing.JFrame {
 	}
 	
 	public void addData(final List<SpreadObject> spreadList) {
+		this.spreadList  = spreadList;
 		Object rows[][] = new Object[spreadList.size()][4];
 		for(int j = 0; j < spreadList.size(); j++) {
 			SpreadObject currPair = spreadList.get(j);
@@ -456,6 +464,20 @@ public class App extends javax.swing.JFrame {
 		return dataset;
 	}
 	
+	private JMenuItem getSaveToCsvItem() {
+		if(saveToCsvItem == null) {
+			saveToCsvItem = new JMenuItem();
+			saveToCsvItem.setText("Save to CSV with Dates");
+			saveToCsvItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent evt) {
+					saveData(true);
+					
+				}
+			});
+		}
+		return saveToCsvItem;
+	}
+
 //	private JScrollPane getJScrollPane2() {
 //		if(jScrollPane2 == null) {
 //			jScrollPane2 = new JScrollPane();
@@ -487,5 +509,74 @@ public class App extends javax.swing.JFrame {
 //		}
 //		return jScrollPane2;
 //	}
+	/**
+	 * Сохраняет данные в csv. 
+	 * 
+	 * @param withDates if true - add dates data to csv, else - remove date data
+	 **/
+	private void saveData(boolean withDates) {
+		//Получаем ссылку на данные и проверяем на наличие данных
+		if(spreadList == null)
+			JOptionPane
+			.showMessageDialog(jPanel1, "Данные не загружены", "Oops", JOptionPane.PLAIN_MESSAGE);
+	    
+	    final String COMMA_DELIMITER = ",";				
+	    final String NEW_LINE_SEPARATOR = "\n";
+	    FileWriter writer = null;
+		//вызываем сохранение
+		try {
+			writer = new FileWriter("pairData.csv");
+			
+			for(SpreadObject spreadListIt : spreadList) {
+//				if(withDates) {
+//					writer.append("Date");
+//					writer.append(COMMA_DELIMITER);
+//				}
+//				writer.append(NEW_LINE_SEPARATOR);
+				
+				for(SpreadData spreadData : spreadListIt.getData()) {
+					writer.append(spreadListIt.getBaseStock().getTicker());
+					writer.append("-");
+					writer.append(spreadListIt.getSecondStock().getTicker());
+					writer.append(COMMA_DELIMITER);
+					
+					if(withDates) {
+						writer.append(spreadData.getDate());
+						writer.append(COMMA_DELIMITER);
+					}
+
+					writer.append(spreadData.getSpreadValue().toPlainString());
+					writer.append(NEW_LINE_SEPARATOR);
+				}
+			}
+			JOptionPane
+			.showMessageDialog(jPanel1, "Данные сохранены", "OK", JOptionPane.PLAIN_MESSAGE);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.flush();
+				writer.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private JMenuItem getSaveWithoutDataItem() {
+		if(saveWithoutDataItem == null) {
+			saveWithoutDataItem = new JMenuItem();
+			saveWithoutDataItem.setText("Save to CSV without Dates");
+			saveWithoutDataItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent evt) {
+					saveData(false);
+				}
+			});
+		}
+		return saveWithoutDataItem;
+	}
 
 }

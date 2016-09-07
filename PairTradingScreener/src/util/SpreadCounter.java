@@ -89,6 +89,10 @@ public class SpreadCounter {
 					prevFirstSpread = firstVolat;
 					prevSecondSpread = secondVolat;
 				} else {
+//					System.gc();
+					prevFirstSpread.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+					firstVolat.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+					
 					prevFirstSpread = prevFirstSpread.add(firstVolat);
 					prevSecondSpread = prevSecondSpread.add(secondVolat);
 					BigDecimal spread = prevFirstSpread.subtract(prevSecondSpread);

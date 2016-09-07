@@ -34,7 +34,7 @@ public class UtilHelper {
 			prevVal = ma20.get(i).add(prevVal);
 			
 		}
-		prevVal = prevVal.divide(new BigDecimal(21), 7, RoundingMode.CEILING);
+		prevVal = prevVal.divide(new BigDecimal(21), 4, RoundingMode.HALF_EVEN);
 		return prevVal;
 	}
 	/***
@@ -42,7 +42,7 @@ public class UtilHelper {
 	 * @param item 
 	 * @return 
 	 */
-	public static String loadMath(Stock item) {		
+	public static String loadMath(Stock item) {
 		double prevPrice = 0;
 		List<BigDecimal> ma20 = new ArrayList<BigDecimal>(21); 
 		boolean firstTime = true;
@@ -60,15 +60,18 @@ public class UtilHelper {
 			Double currPrice = Double.valueOf(dd.getAdjClose());
 			double dailyChange = currPrice/prevPrice;
 			double ch = Math.log(dailyChange);
-			BigDecimal dailyDeltaLog = new BigDecimal(ch);
+			BigDecimal dailyDeltaLog = new BigDecimal(ch).setScale(4, BigDecimal.ROUND_HALF_EVEN);
 			BigDecimal dailyDeltaLogAbs = dailyDeltaLog.abs();
+			dailyDeltaLogAbs = dailyDeltaLogAbs.setScale(4, BigDecimal.ROUND_HALF_EVEN);
 			
 			prevPrice = currPrice;
 			
 			//Добавляем в лист данных для вычислений среднего значения за 21 день
 			ma20.add(dailyDeltaLogAbs);
+			
+			
 			if(ma20.size() == 21) {
-				maValue = UtilHelper.getMaValue(ma20);
+				maValue = UtilHelper.getMaValue(ma20).setScale(4, BigDecimal.ROUND_HALF_EVEN);
 				ma20.remove(0);
 				
 				dd.setAverVolatile(maValue);
@@ -80,15 +83,13 @@ public class UtilHelper {
 				
 				BigDecimal normXln;
 				try {
-					normXln = dailyDeltaLog.divide(prevMaValue, 7, RoundingMode.CEILING);
+					normXln = dailyDeltaLog.divide(prevMaValue, 4, RoundingMode.HALF_EVEN);
 					dd.setVolatile(normXln);
 					prevMaValue = maValue;
 					
 				} catch (ArithmeticException e) {
 					return item.getTicker();
 				} 
-				
-				
 			}
 			
 		}
