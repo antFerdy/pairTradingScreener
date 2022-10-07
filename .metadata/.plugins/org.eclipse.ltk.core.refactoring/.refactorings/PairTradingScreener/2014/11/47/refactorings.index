@@ -1,6 +1,0 @@
-1416421859943	Encapsulate field 'adjClose'
-1416421866843	Encapsulate field 'date'
-1416421882800	Encapsulate field 'ticker'
-1416421969984	Encapsulate field 'data'
-1416423230367	Move compilation unit
-1416423321524	Rename package 'Controller'
